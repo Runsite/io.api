@@ -12,5 +12,9 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+	return view('welcome');
+});
+
+Route::group(['middleware'=>'check-access-token'], function() {
+	Route::get('optimize', ['as'=>'optimize', 'uses'=>'ImagesController@optimize']);
 });
