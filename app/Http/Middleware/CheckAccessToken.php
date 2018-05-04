@@ -3,7 +3,8 @@
 namespace App\Http\Middleware;
 
 use Closure;
-use App\AccessToken;
+use Facades\Spatie\Referer\Referer;
+use App\Models\AccessToken;
 
 class CheckAccessToken
 {
@@ -17,8 +18,9 @@ class CheckAccessToken
     public function handle($request, Closure $next)
     {
         $token = $request->header('Authorization');
+        $domain = $request->header('host');
 
-        if(! AccessToken::where('token', $token))
+        if(! $token or ! AccessToken::where('token', $token)->where('domain', $domain)->count())
         {
             return response('Not valid token provider.', 401);
         }
